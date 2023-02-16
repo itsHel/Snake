@@ -38,8 +38,8 @@
     background: crimson;
 }
 .square.snake-dead {
-    transition: .75s;
+    transition: all 1s;
     background: var(--snake-color);
-    box-shadow: inset 0px 0px 0px 10px #fff;
+    box-shadow: inset 0px 0px 8px 1.25vh #fff;
     border: 1px solid rgb(212, 201, 233);
 }
