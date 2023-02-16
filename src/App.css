@@ -32,7 +32,7 @@ body{
 }
 .app-header h2{
     margin: 10px 0 2px 0;
-    font-size: 26px;
+    font-size: 28px;
     display: flex;
 }
 #header-img{
@@ -44,7 +44,7 @@ body{
     display: flex;
     gap: 5px;
     color: var(--lesser-text);
-    font-size: 18px;
+    font-size: 20px;
 }
 
 #main{
@@ -129,14 +129,12 @@ body{
     display: inline-block;
     color: var(--lesser-text);
     box-shadow: 0px 0px 2px 1px rgb(0 0 0 / 20%);
-    font-size: 14px;
+    font-size: 15px;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 .key-text-info{
     display: inline-block;
     width: 50%;
-    text-align: left;
-    font-size: 15px;
     text-align: center;
 }
 
@@ -150,7 +148,7 @@ body{
     color: white;
     overflow: hidden;
     min-width: max-content;
-    font-size: 16px;
+    font-size: 18px;
     border-radius: 4px;
     display: inline-block;
     padding: 3px 10px 4px 10px;
@@ -176,20 +174,15 @@ body{
 }
 .button-green:after {
     background-image: linear-gradient(to bottom, #1DcD77, #1C8F93);
-    background-image: -webkit-linear-gradient(to bottom, #1DcD77, #1C8F93);
 }
 .button-green:before {
     background-image: linear-gradient(to bottom, #16b869, #126668);
-    background-image: -webkit-linear-gradient(to bottom, #16b869, #126668);
 }
 .button-green:active:before {
-    box-shadow: inset 0 0 6px 2px rgb(0 0 0 / 66%), 0 1px 0 #eeeeee;
+    box-shadow: inset 0 0 6px 3px rgb(0 0 0 / 66%), 0 1px 0 #eeeeee;
     filter:brightness(90%);
 }
-.button-green:before:before {
-    box-shadow: inset 0 0 6px 2px rgb(0 0 0 / 66%), 0 1px 0 #eeeeee;
+.button-green:active:after {
+    box-shadow: inset 0 0 6px 3px rgb(0 0 0 / 66%), 0 1px 0 #eeeeee;
     filter:brightness(90%);
-}
-.button-green:active{
-    box-shadow: none;
 }

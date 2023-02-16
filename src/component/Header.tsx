@@ -6,7 +6,7 @@ export default function Header(){
 
     return(
         <div className="app-header">
-            <h2><img id="header-img" src="/imgs/header-img.png" alt=""/>nake</h2>
+            <h2><img id="header-img" src="./imgs/header-img.png" alt=""/>nake</h2>
             <div className="header-text">Eaten: <div>{eaten}</div></div>
         </div>
     )
