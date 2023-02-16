@@ -1,0 +1,45 @@
+:root{
+    --snake-color: rgb(96, 194, 96);
+    --snake-head-color: rgb(30, 145, 30);
+}
+
+#board {
+    display: flex;
+    flex-direction: column;
+    height: var(--board-size);
+    width: var(--board-size);
+    border: 1px solid rgb(0, 0, 0);
+}
+#board.board-lost{
+    border: 1px solid crimson;
+}
+
+.board-row{
+    display: flex;
+}
+
+.square {
+    border: 1px solid rgba(112, 76, 182, 0.3);
+    height: var(--square-size);
+    width: var(--square-size);
+    box-sizing: border-box;
+    background: white;
+}
+.square.snake {
+    background: var(--snake-color);
+}
+.square.snake-head{
+    background: var(--snake-head-color);
+}
+.square.rock {
+    background: darkslategray;
+}
+.square.food {
+    background: crimson;
+}
+.square.snake-dead {
+    transition: .75s;
+    background: var(--snake-color);
+    box-shadow: inset 0px 0px 0px 10px #fff;
+    border: 1px solid rgb(212, 201, 233);
+}
