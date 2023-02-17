@@ -50,7 +50,7 @@ const initialState: BoardState = {
     currentBoard: 0,
     lost: false
 };
-let t0=0,t1;
+
 export const boardSlice = createSlice({
     name: "board",
     initialState,
@@ -62,9 +62,6 @@ export const boardSlice = createSlice({
             state.snakeEnd = getNextPos(state.snakeEnd, snakeEndDirection);
         },
         moveSnake: (state) => {
-t1 = performance.now();
-console.log("Call to do Something took " + (t1 - t0) + " milliseconds.");
-
             let movesCount = (state.doubleMove) ? 2 : 1;
             state.doubleMove = false;
 
@@ -104,8 +101,6 @@ console.log("Call to do Something took " + (t1 - t0) + " milliseconds.");
 
                 state.snakeLatestDirection = state.snakeDirection;
             }
-
-t0 = performance.now();
         },
         changeDirection: (state, action: PayloadAction<Direction>) => {
             if(state.lost)
