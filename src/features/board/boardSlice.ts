@@ -4,7 +4,7 @@ import { RootState } from '../../app/store';
 const size = 30;
 const snakeBaseSize = 6;
 const snakeBaseSpeedMs = 350;
-const speedchange = -5;
+const speedchange = -4;
 const speedMinMs = 50;
 const startDirection: StartDirection = "east";
 export const levelCount = 7;
@@ -50,7 +50,7 @@ const initialState: BoardState = {
     currentBoard: 0,
     lost: false
 };
-
+let t0=0,t1;
 export const boardSlice = createSlice({
     name: "board",
     initialState,
@@ -62,6 +62,9 @@ export const boardSlice = createSlice({
             state.snakeEnd = getNextPos(state.snakeEnd, snakeEndDirection);
         },
         moveSnake: (state) => {
+t1 = performance.now();
+console.log("Call to do Something took " + (t1 - t0) + " milliseconds.");
+
             let movesCount = (state.doubleMove) ? 2 : 1;
             state.doubleMove = false;
 
@@ -101,6 +104,8 @@ export const boardSlice = createSlice({
 
                 state.snakeLatestDirection = state.snakeDirection;
             }
+
+t0 = performance.now();
         },
         changeDirection: (state, action: PayloadAction<Direction>) => {
             if(state.lost)

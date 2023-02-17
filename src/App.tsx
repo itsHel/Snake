@@ -24,18 +24,22 @@ function App() {
     function handleKeyDown(e: React.KeyboardEvent){
         switch(e.key){
             case "a": 
+            case "A": 
             case "ArrowLeft":
                 dispatch(changeDirection("west"));
                 break;
             case "d": 
+            case "D": 
             case "ArrowRight":
                 dispatch(changeDirection("east"));
                 break;
             case "s": 
+            case "S": 
             case "ArrowDown":
                 dispatch(changeDirection("south"));
                 break;
             case "w": 
+            case "W": 
             case "ArrowUp":
                 dispatch(changeDirection("north"));
                 break;

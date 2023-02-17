@@ -13,18 +13,21 @@ import {
 import './board.css';
 
 const clearSnakeSpeedMs = 80;
-const fps = 60;
-const interval = 1000/fps;
+
+type FPSType = 60 | 144;
 
 export default function Board() {
+    const clearSnakeInterval = useRef<number | null>(null);
+    const RAF = useRef<number | null>(null);
+    const FPS = useRef<FPSType>(60);
+
     const state = useAppSelector(boardState);
     const playerLost = useAppSelector(lost);
     const gameOn = useAppSelector(unpaused);
-    const speed = useAppSelector(getSpeed) * fps/1000;
+    const speed = useAppSelector(getSpeed) * (FPS.current / 1000);
     const dispatch = useAppDispatch();
     
-    const clearSnakeInterval = useRef<number | null>(null);
-    const RAF = useRef<number | null>(null);
+    
 
     useEffect(() => {
         // Clear on lose
@@ -44,43 +47,56 @@ export default function Board() {
         if(!gameOn)
             return;
 
-        let start: number;
         let stepTemp: number = 0;
 
         RAF.current = requestAnimationFrame(move);
 
-        function move(timestamp: number){
+        function move(){
             RAF.current = requestAnimationFrame(move);
 
-            if(start === undefined){
-                start = timestamp;
-            }
+            stepTemp += 1;
 
-            const delta = timestamp - start;
-
-            if(delta > interval){
-                start = timestamp - (delta % interval);
-
-                stepTemp += 1;
-
-                if(stepTemp >= speed){
-                    stepTemp = stepTemp % speed;
-                    dispatch(moveSnake());
-                }
+            if(stepTemp >= speed){
+                stepTemp = stepTemp % speed;
+                dispatch(moveSnake());
             }
         }
-
-        
 
         return () => {
             if(RAF.current){
                 cancelAnimationFrame(RAF.current);
             }
         }
-    }, [speed, gameOn, playerLost]);
+    }, [speed, gameOn, playerLost, FPS]);
 
     useEffect(() => {
         dispatch(resetBoard(0));
+
+        setFPS();
+
+        function setFPS(){
+            let start: number;
+            let framesCount = 0;
+            requestAnimationFrame(test);
+
+            function test(timestamp: number){
+                if(!start){
+                    start = timestamp;
+                }
+
+                framesCount++;
+
+                if(timestamp < start + 1000){
+                    requestAnimationFrame(test);
+                } else {
+                    if(Math.abs(60 - framesCount) > Math.abs(144 - framesCount)){
+                        FPS.current = 144;
+                    } else {
+                        FPS.current = 60;
+                    }
+                }
+            }
+        }
     }, []);
 
     return (
