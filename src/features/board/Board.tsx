@@ -27,8 +27,6 @@ export default function Board() {
     const speed = useAppSelector(getSpeed) * (FPS.current / 1000);
     const dispatch = useAppDispatch();
     
-    
-
     useEffect(() => {
         // Clear on lose
         if(playerLost){
@@ -48,7 +46,6 @@ export default function Board() {
             return;
 
         let stepTemp: number = 0;
-
         RAF.current = requestAnimationFrame(move);
 
         function move(){
@@ -71,7 +68,6 @@ export default function Board() {
 
     useEffect(() => {
         dispatch(resetBoard(0));
-
         setFPS();
 
         function setFPS(){
@@ -89,11 +85,7 @@ export default function Board() {
                 if(timestamp < start + 1000){
                     requestAnimationFrame(test);
                 } else {
-                    if(Math.abs(60 - framesCount) > Math.abs(144 - framesCount)){
-                        FPS.current = 144;
-                    } else {
-                        FPS.current = 60;
-                    }
+                    FPS.current = (Math.abs(60 - framesCount) > Math.abs(144 - framesCount)) ? 144 : 60;
                 }
             }
         }

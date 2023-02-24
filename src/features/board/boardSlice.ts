@@ -3,26 +3,33 @@ import { RootState } from '../../app/store';
 
 const size = 30;
 const snakeBaseSize = 6;
-const snakeBaseSpeedMs = 350;
+const snakeBaseSpeedMs = 370;
 const speedchange = -4;
 const speedMinMs = 50;
 const startDirection: StartDirection = "east";
 export const levelCount = 7;
 
-// -1 = death, 0 = empty, 1 = snake, 2 = rock, 3 = food, 4 - head
-export type SquareType = -1 | 0 | 1 | 2 | 3 | 4;
-export type LevelType = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export enum Square {
+    DEAD = -1,
+    EMPTY = 0,
+    SNAKE = 1,
+    HEAD = 2,
+    ROCK = 3,
+    FOOD = 4
+}
+
+export type Level = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export type Direction = "west" | "east" | "south" | "north";
 export type StartDirection = "east" | "south" | "north";
 
-type BoardType = SquareType[][];
+type Board = Square[][];
 type Position = {
     x: number,
     y: number
 };
 
 interface BoardState {
-    value: BoardType;
+    value: Board;
     snakeHead: Position;
     snakeEnd: Position;
     snakeDirection: Direction;
@@ -32,12 +39,12 @@ interface BoardState {
     snakeSpeed: number;
     eatenCount: number;
     unpaused: boolean;
-    currentBoard: LevelType;
+    currentBoard: Level;
     lost: boolean;
 }
 
 const initialState: BoardState = {
-    value: new Array(size).fill([]).map(() => new Array(size).fill(0)),
+    value: new Array(size).fill([]).map(() => new Array(size).fill(Square.EMPTY)),
     snakeHead: {y: 0, x: 0},
     snakeEnd: {y: 0, x: 0},
     snakeDirection: startDirection,
@@ -58,7 +65,7 @@ export const boardSlice = createSlice({
         clearSnake: (state) => {
             let snakeEndDirection: Direction = state.snakeEndDirectionStack.shift()!;
 
-            state.value[state.snakeEnd.y][state.snakeEnd.x] = -1;
+            state.value[state.snakeEnd.y][state.snakeEnd.x] = Square.DEAD;
             state.snakeEnd = getNextPos(state.snakeEnd, snakeEndDirection);
         },
         moveSnake: (state) => {
@@ -68,8 +75,8 @@ export const boardSlice = createSlice({
             for(let i = 0; i < movesCount; i++){
                 let newHeadPos: Position = getNextPos(state.snakeHead, state.snakeDirection);
 
-                if((state.value[newHeadPos.y][newHeadPos.x] === 1 || state.value[newHeadPos.y][newHeadPos.x] === 2 || state.value[newHeadPos.y][newHeadPos.x] === 4) && 
-                    !(newHeadPos.y === state.snakeEnd.y && newHeadPos.x === state.snakeEnd.x)){
+                if((state.value[newHeadPos.y][newHeadPos.x] === Square.SNAKE || state.value[newHeadPos.y][newHeadPos.x] === Square.ROCK || state.value[newHeadPos.y][newHeadPos.x] === Square.HEAD) && 
+                !(newHeadPos.y === state.snakeEnd.y && newHeadPos.x === state.snakeEnd.x)){
                     state.unpaused = false;
                     state.lost = true;
 
@@ -78,10 +85,10 @@ export const boardSlice = createSlice({
 
                 state.snakeEndDirectionStack.push(state.snakeDirection);
 
-                if(state.value[newHeadPos.y][newHeadPos.x] === 3){
+                if(state.value[newHeadPos.y][newHeadPos.x] === Square.FOOD){
                     // Food found
                     let foodPos: Position = createFoodPos(state.value);
-                    state.value[foodPos.y][foodPos.x] = 3;
+                    state.value[foodPos.y][foodPos.x] = Square.FOOD;
 
                     state.eatenCount += 1;
 
@@ -91,12 +98,12 @@ export const boardSlice = createSlice({
                 } else {
                     let snakeEndDirection: Direction = state.snakeEndDirectionStack.shift()!;
 
-                    state.value[state.snakeEnd.y][state.snakeEnd.x] = 0;
+                    state.value[state.snakeEnd.y][state.snakeEnd.x] = Square.EMPTY;
                     state.snakeEnd = getNextPos(state.snakeEnd, snakeEndDirection);
                 }
                 
-                state.value[newHeadPos.y][newHeadPos.x] = 4;
-                state.value[state.snakeHead.y][state.snakeHead.x] = 1;
+                state.value[newHeadPos.y][newHeadPos.x] = Square.HEAD;
+                state.value[state.snakeHead.y][state.snakeHead.x] = Square.SNAKE;
                 state.snakeHead = newHeadPos;
 
                 state.snakeLatestDirection = state.snakeDirection;
@@ -107,10 +114,10 @@ export const boardSlice = createSlice({
                 return;
             
             // Stops player from chnaging direction into snake body
-            if( (state.snakeLatestDirection === "west" && action.payload === "east") || 
-                (state.snakeLatestDirection === "east" && action.payload === "west") ||
-                (state.snakeLatestDirection === "south" && action.payload === "north") || 
-                (state.snakeLatestDirection === "north" && action.payload === "south"))
+            if((state.snakeLatestDirection === "west" && action.payload === "east") || 
+            (state.snakeLatestDirection === "east" && action.payload === "west") ||
+            (state.snakeLatestDirection === "south" && action.payload === "north") || 
+            (state.snakeLatestDirection === "north" && action.payload === "south"))
                 return;
 
             if(state.unpaused && action.payload === state.snakeLatestDirection){
@@ -122,7 +129,7 @@ export const boardSlice = createSlice({
             state.unpaused = true;
             state.snakeDirection = action.payload;
         },
-        resetBoard: (state, action: PayloadAction<LevelType>) => {
+        resetBoard: (state, action: PayloadAction<Level>) => {
             state.lost = false;
             state.unpaused = false;
             state.snakeSpeed = snakeBaseSpeedMs;
@@ -131,14 +138,14 @@ export const boardSlice = createSlice({
 
             for(let i = 0; i < state.value.length; i++){
                 for(let j = 0; j < state.value[i].length; j++){
-                    state.value[i][j] = 0;
+                    state.value[i][j] = Square.EMPTY;
                 }
             }
         
             createLevel(action.payload);
             createSnake();
 
-            function createLevel(type: LevelType){
+            function createLevel(type: Level){
                 const isOdd = size % 2;
                 let startPos;
                 
@@ -157,7 +164,7 @@ export const boardSlice = createSlice({
                                 if(i === 1 && ((j === Math.floor(size/2) || j === (Math.floor(size/2) - 1) || (j === (Math.floor(size/2) + 1) && isOdd))))
                                     continue;
                                 
-                                state.value[j][xPoints[i]] = 2;
+                                state.value[j][xPoints[i]] = Square.ROCK;
                             }
                         }
                         
@@ -168,17 +175,17 @@ export const boardSlice = createSlice({
                             if(i === Math.floor(size/2) || i === (Math.floor(size/2) - 1) || (i === (Math.floor(size/2) + 1) && isOdd))
                                 continue;
                             
-                            state.value[i][i] = 2;
-                            state.value[i][size - i - 1] = 2;
+                            state.value[i][i] = Square.ROCK;
+                            state.value[i][size - i - 1] = Square.ROCK;
                         }
 
                         break;
                     case 3:
                         for(let i = 0; i < size; i++){
-                            state.value[0][i] = 2;
-                            state.value[size - 1][i] = 2;
-                            state.value[i][0] = 2;
-                            state.value[i][size - 1] = 2;
+                            state.value[0][i] = Square.ROCK;
+                            state.value[size - 1][i] = Square.ROCK;
+                            state.value[i][0] = Square.ROCK;
+                            state.value[i][size - 1] = Square.ROCK;
                         }
 
                         break;
@@ -190,9 +197,9 @@ export const boardSlice = createSlice({
                             do {
                                 x = Math.floor(Math.random() * size);
                                 y = Math.floor(Math.random() * size);
-                            } while (state.value[y][x] !== 0)
+                            } while (state.value[y][x] !== Square.EMPTY)
                             
-                            state.value[y][x] = 2;
+                            state.value[y][x] = Square.ROCK;
                         }
 
                         break;
@@ -211,10 +218,10 @@ export const boardSlice = createSlice({
                             let length2 = getRandomInRange(Math.round(size * 0.1), Math.round(size * 0.2));
 
                             for(let j = 0; j < length1; j++){
-                                state.value[j][temp[i]] = 2;
+                                state.value[j][temp[i]] = Square.ROCK;
                             }
                             for(let j = 0; j < length2; j++){
-                                state.value[size - j - 1][temp[i]] = 2;
+                                state.value[size - j - 1][temp[i]] = Square.ROCK;
                             }
                         }
 
@@ -224,10 +231,10 @@ export const boardSlice = createSlice({
                         let length2 = getRandomInRange(Math.round(size * 0.1), Math.round(size * 0.2));
 
                         for(let j = 0; j < length1; j++){
-                            state.value[y1][j] = 2;
+                            state.value[y1][j] = Square.ROCK;
                         }
                         for(let j = 0; j < length2; j++){
-                            state.value[y2][size - j - 1] = 2;
+                            state.value[y2][size - j - 1] = Square.ROCK;
                         }
 
                         let pos = {
@@ -255,7 +262,7 @@ export const boardSlice = createSlice({
                     y = getRandomInRange(1, size - 2);
     
                     for(let i = x; i < x + snakeSpace; i++){
-                        if(state.value[y][i - snakeBaseSize - 1] !== 0){
+                        if(state.value[y][i - snakeBaseSize - 1] !== Square.EMPTY){
                             dontBreak = true;
                             break;
                         }
@@ -267,15 +274,15 @@ export const boardSlice = createSlice({
                 } while(dontBreak)
     
                 for(let i = x - snakeBaseSize + 1; i <= x; i++){
-                    state.value[y][i] = 1;
+                    state.value[y][i] = Square.SNAKE;
                 }
     
                 state.snakeHead = {y: y, x: x};
-                state.value[y][x] = 4;
+                state.value[y][x] = Square.HEAD;
                 state.snakeEnd = {y: y, x: x - snakeBaseSize + 1};
     
                 let foodPos: Position = createFoodPos(state.value);
-                state.value[foodPos.y][foodPos.x] = 3;
+                state.value[foodPos.y][foodPos.x] = Square.FOOD;
             }
 
             function drawLabyrinth(start: Position, length: number, direction: Direction, drawFull: number, cutLength: boolean){
@@ -285,7 +292,7 @@ export const boardSlice = createSlice({
                 let pos: Position = start;
 
                 for(let i = 0; i < length; i++){
-                    state.value[pos.y][pos.x] = 2;
+                    state.value[pos.y][pos.x] = Square.ROCK;
                     pos = getNextPos(pos, direction);
                 }
 
@@ -325,7 +332,7 @@ export const boardSlice = createSlice({
                 let pos: Position = start;
 
                 for(let i = 0; i < length; i++){
-                    state.value[pos.y][pos.x] = 2;
+                    state.value[pos.y][pos.x] = Square.ROCK;
                     pos = getNextPos(pos, direction);
                 }
 
@@ -390,7 +397,7 @@ function fixBounds(pos: Position): Position{
     return pos;
 }
 
-function createFoodPos(board: BoardType): Position{
+function createFoodPos(board: Board): Position{
     let y, x;
 
     do {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import Board from "../features/board/Board";
 import PickLevel from "./PickLevel";
 import Controls, { MainClassType } from "./Controls";
-import { LevelType, resetBoard } from "../features/board/boardSlice";
+import { Level, resetBoard } from "../features/board/boardSlice";
 import { useAppDispatch } from "../app/hooks";
 
 export default function Body(){
@@ -17,7 +17,7 @@ export default function Body(){
         }
     }
 
-    function changeLevel(level: LevelType){
+    function changeLevel(level: Level){
         setMainClass("show-board");
 
         dispatch(resetBoard(level));
