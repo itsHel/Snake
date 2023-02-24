@@ -10,12 +10,12 @@ const startDirection: StartDirection = "east";
 export const levelCount = 7;
 
 export enum Square {
-    DEAD = -1,
-    EMPTY = 0,
-    SNAKE = 1,
-    HEAD = 2,
-    ROCK = 3,
-    FOOD = 4
+    DEAD,
+    EMPTY,
+    SNAKE,
+    HEAD,
+    ROCK,
+    FOOD
 }
 
 export type Level = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -403,7 +403,7 @@ function createFoodPos(board: Board): Position{
     do {
         y = Math.floor(Math.random() * size);
         x = Math.floor(Math.random() * size);
-    } while(board[y][x] !== 0)
+    } while(board[y][x] !== Square.EMPTY)
 
     return {y: y, x: x};
 }
