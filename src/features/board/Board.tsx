@@ -16,7 +16,7 @@ const clearSnakeSpeedMs = 80;
 
 type FPSType = 60 | 144;
 
-export default function Board() {
+export default function Board(){
     const clearSnakeInterval = useRef<number | null>(null);
     const RAF = useRef<number | null>(null);
     const FPS = useRef<FPSType>(60);
