@@ -19,7 +19,7 @@ function App() {
     const boardLevel = useAppSelector(currentBoard);
     const theme = useAppSelector(currentTheme);
 
-    function handleKeyDown(e: React.KeyboardEvent){
+    function handleKeyDown(e: KeyboardEvent){
         switch(e.key){
             case "a": case "A": case "ArrowLeft":
                 dispatch(changeDirection("west"));
@@ -39,8 +39,17 @@ function App() {
         }
     }
 
+    // Add keydown to body to be sure it's always active
+    React.useEffect(() => {
+        document.addEventListener("keydown", handleKeyDown);
+        
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+        }
+    }, []);
+
     return (
-        <div className={"App " + theme} onKeyDown={handleKeyDown} tabIndex={0}>
+        <div className={"App " + theme}>
             <Theme/>
             <Header/>
             <Body/>

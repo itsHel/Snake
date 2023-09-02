@@ -23,7 +23,7 @@ export default function Controls(props: ControlProps){
             <div className="control-buttons">
                 <button className={"button-green" + ((props.mainClass === "hide-board") ? " disabled" : "")} onClick={restart}>Restart</button>
                 {(props.mainClass === "show-board") && <button className={"button-green" + ((gameOn) ? " disabled" : "")} onClick={() => props.showBoard(false)}>Levels</button>}
-                {(props.mainClass === "hide-board") && <button className="button-green" onClick={() => props.showBoard(true)}>Back</button>}
+                {(props.mainClass === "hide-board") && <button className="button-green" onClick={() => {props.showBoard(true); restart();}}>Back</button>}
             </div>
             <Info/>
         </div>
