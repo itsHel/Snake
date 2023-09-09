@@ -45,7 +45,7 @@ function App() {
         }
     }
 
-    // Add keydown to body to be sure it's always active
+    // Add keydown to document - to be sure it's always active
     React.useEffect(() => {
         document.addEventListener("keydown", handleKeyDown);
 
