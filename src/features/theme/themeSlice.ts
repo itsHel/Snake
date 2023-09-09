@@ -1,30 +1,32 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../app/store';
+import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../../app/store";
 
 type Theme = "light" | "dark";
 
 interface ThemeState {
-    type: Theme
+    type: Theme;
 }
 
 const initialState: ThemeState = {
-    type: window.matchMedia("(prefers-color-scheme: dark)")?.matches ? "dark" : "light"
-}
+    type: window.matchMedia("(prefers-color-scheme: dark)")?.matches
+        ? "dark"
+        : "light",
+};
 
 export const themeSlice = createSlice({
     name: "theme",
     initialState,
     reducers: {
         changeTheme: (state) => {
-            if(state.type == "light"){
+            if (state.type == "light") {
                 state.type = "dark";
             } else {
                 state.type = "light";
             }
 
             console.log(state.type);
-        }
-    }
+        },
+    },
 });
 
 export const { changeTheme } = themeSlice.actions;

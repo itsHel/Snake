@@ -1,22 +1,23 @@
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import {
-    changeTheme,
-    currentTheme
-} from './themeSlice';
-import './theme.scss';
+import { changeTheme, currentTheme } from "./themeSlice";
+import "./theme.scss";
 
-export default function Theme(){
+export default function Theme() {
     const dispatch = useAppDispatch();
     const theme = useAppSelector(currentTheme);
 
-    function handleThemeClick(){
+    function handleThemeClick() {
         dispatch(changeTheme());
     }
 
-    return(
+    return (
         <div className="toggle-btn" id="theme-toggle">
-            <input type="checkbox" onChange={handleThemeClick} checked={theme == "dark"}/>
+            <input
+                type="checkbox"
+                onChange={handleThemeClick}
+                checked={theme == "dark"}
+            />
             <span></span>
         </div>
-    )
+    );
 }

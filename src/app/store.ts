@@ -1,11 +1,11 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import boardReducer from '../features/board/boardSlice';
-import themerReducer from '../features/theme/themeSlice';
+import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import boardReducer from "../features/board/boardSlice";
+import themerReducer from "../features/theme/themeSlice";
 
 export const store = configureStore({
     reducer: {
         board: boardReducer,
-        theme: themerReducer
+        theme: themerReducer,
     },
 });
 

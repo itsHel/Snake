@@ -5,19 +5,19 @@ import Controls, { MainClassType } from "./Controls";
 import { Level, resetBoard } from "../features/board/boardSlice";
 import { useAppDispatch } from "../app/hooks";
 
-export default function Body(){
+export default function Body() {
     const dispatch = useAppDispatch();
     const [mainClass, setMainClass] = useState<MainClassType>("show-board");
-    
-    function showBoard(show: boolean){
-        if(show){
+
+    function showBoard(show: boolean) {
+        if (show) {
             setMainClass("show-board");
         } else {
             setMainClass("hide-board");
         }
     }
 
-    function changeLevel(level: Level){
+    function changeLevel(level: Level) {
         setMainClass("show-board");
 
         dispatch(resetBoard(level));
@@ -26,10 +26,10 @@ export default function Body(){
     return (
         <div id="body">
             <div id="main" className={mainClass}>
-                <Board/>
-                <PickLevel changeLevel={changeLevel}/>
+                <Board />
+                <PickLevel changeLevel={changeLevel} />
             </div>
-            <Controls showBoard={showBoard} mainClass={mainClass}/>
+            <Controls showBoard={showBoard} mainClass={mainClass} />
         </div>
-    )
+    );
 }

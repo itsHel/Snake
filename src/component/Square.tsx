@@ -1,13 +1,13 @@
-import { SquareType } from "../features/board/boardSlice"
+import { SquareType } from "../features/board/boardSlice";
 
 interface SquareProps {
     type: SquareType;
 }
 
-export default function Square(props: SquareProps){
+export default function Square(props: SquareProps) {
     let typeClass;
 
-    switch(props.type){
+    switch (props.type) {
         case -1:
             typeClass = "snake-dead";
             break;
@@ -28,7 +28,5 @@ export default function Square(props: SquareProps){
             break;
     }
 
-    return (
-        <div className={"square " + typeClass}></div>
-    )
+    return <div className={"square " + typeClass}></div>;
 }

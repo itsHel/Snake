@@ -1,4 +1,4 @@
-export default function Info(){
+export default function Info() {
     return (
         <div id="info">
             <div className="info-row">
@@ -15,5 +15,5 @@ export default function Info(){
                 <div className="key-text-info">- Controls</div>
             </div>
         </div>
-    )
+    );
 }
