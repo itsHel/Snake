@@ -5,17 +5,17 @@ import Header from "./component/Header";
 import Theme from "./features/theme/Theme";
 import "./App.css";
 
-import {
-    changeDirection,
-    resetBoard,
-    currentBoard,
-} from "./features/board/boardSlice";
+import { changeDirection, resetBoard, currentBoard } from "./features/board/boardSlice";
 import { currentTheme } from "./features/theme/themeSlice";
 
 function App() {
     const dispatch = useAppDispatch();
     const boardLevel = useAppSelector(currentBoard);
     const theme = useAppSelector(currentTheme);
+
+    function restart() {
+        dispatch(resetBoard(boardLevel));
+    }
 
     function handleKeyDown(e: KeyboardEvent) {
         switch (e.key) {
@@ -40,7 +40,7 @@ function App() {
                 dispatch(changeDirection("north"));
                 break;
             case "Enter":
-                dispatch(resetBoard(boardLevel));
+                restart();
                 return;
         }
     }
@@ -52,7 +52,7 @@ function App() {
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         };
-    }, []);
+    }, [boardLevel]);
 
     return (
         <div className={"App " + theme}>

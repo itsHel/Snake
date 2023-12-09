@@ -44,9 +44,7 @@ interface BoardState {
 }
 
 const initialState: BoardState = {
-    value: new Array(size)
-        .fill([])
-        .map(() => new Array(size).fill(Square.EMPTY)),
+    value: new Array(size).fill([]).map(() => new Array(size).fill(Square.EMPTY)),
     snakeHead: { y: 0, x: 0 },
     snakeEnd: { y: 0, x: 0 },
     snakeDirection: startDirection,
@@ -65,8 +63,7 @@ export const boardSlice = createSlice({
     initialState,
     reducers: {
         clearSnake: (state) => {
-            let snakeEndDirection: Direction =
-                state.snakeEndDirectionStack.shift()!;
+            let snakeEndDirection: Direction = state.snakeEndDirectionStack.shift()!;
 
             state.value[state.snakeEnd.y][state.snakeEnd.x] = Square.DEAD;
             state.snakeEnd = getNextPos(state.snakeEnd, snakeEndDirection);
@@ -76,21 +73,13 @@ export const boardSlice = createSlice({
             state.doubleMove = false;
 
             for (let i = 0; i < movesCount; i++) {
-                let newHeadPos: Position = getNextPos(
-                    state.snakeHead,
-                    state.snakeDirection,
-                );
+                let newHeadPos: Position = getNextPos(state.snakeHead, state.snakeDirection);
 
                 if (
                     (state.value[newHeadPos.y][newHeadPos.x] === Square.SNAKE ||
-                        state.value[newHeadPos.y][newHeadPos.x] ===
-                            Square.ROCK ||
-                        state.value[newHeadPos.y][newHeadPos.x] ===
-                            Square.HEAD) &&
-                    !(
-                        newHeadPos.y === state.snakeEnd.y &&
-                        newHeadPos.x === state.snakeEnd.x
-                    )
+                        state.value[newHeadPos.y][newHeadPos.x] === Square.ROCK ||
+                        state.value[newHeadPos.y][newHeadPos.x] === Square.HEAD) &&
+                    !(newHeadPos.y === state.snakeEnd.y && newHeadPos.x === state.snakeEnd.x)
                 ) {
                     state.unpaused = false;
                     state.lost = true;
@@ -111,20 +100,14 @@ export const boardSlice = createSlice({
                         state.snakeSpeed += speedchange;
                     }
                 } else {
-                    let snakeEndDirection: Direction =
-                        state.snakeEndDirectionStack.shift()!;
+                    let snakeEndDirection: Direction = state.snakeEndDirectionStack.shift()!;
 
-                    state.value[state.snakeEnd.y][state.snakeEnd.x] =
-                        Square.EMPTY;
-                    state.snakeEnd = getNextPos(
-                        state.snakeEnd,
-                        snakeEndDirection,
-                    );
+                    state.value[state.snakeEnd.y][state.snakeEnd.x] = Square.EMPTY;
+                    state.snakeEnd = getNextPos(state.snakeEnd, snakeEndDirection);
                 }
 
                 state.value[newHeadPos.y][newHeadPos.x] = Square.HEAD;
-                state.value[state.snakeHead.y][state.snakeHead.x] =
-                    Square.SNAKE;
+                state.value[state.snakeHead.y][state.snakeHead.x] = Square.SNAKE;
                 state.snakeHead = newHeadPos;
 
                 state.snakeLatestDirection = state.snakeDirection;
@@ -135,21 +118,14 @@ export const boardSlice = createSlice({
 
             // Stops player from chnaging direction into snake body
             if (
-                (state.snakeLatestDirection === "west" &&
-                    action.payload === "east") ||
-                (state.snakeLatestDirection === "east" &&
-                    action.payload === "west") ||
-                (state.snakeLatestDirection === "south" &&
-                    action.payload === "north") ||
-                (state.snakeLatestDirection === "north" &&
-                    action.payload === "south")
+                (state.snakeLatestDirection === "west" && action.payload === "east") ||
+                (state.snakeLatestDirection === "east" && action.payload === "west") ||
+                (state.snakeLatestDirection === "south" && action.payload === "north") ||
+                (state.snakeLatestDirection === "north" && action.payload === "south")
             )
                 return;
 
-            if (
-                state.unpaused &&
-                action.payload === state.snakeLatestDirection
-            ) {
+            if (state.unpaused && action.payload === state.snakeLatestDirection) {
                 state.doubleMove = true;
             } else {
                 state.doubleMove = false;
@@ -194,8 +170,7 @@ export const boardSlice = createSlice({
                                     i === 1 &&
                                     (j === Math.floor(size / 2) ||
                                         j === Math.floor(size / 2) - 1 ||
-                                        (j === Math.floor(size / 2) + 1 &&
-                                            isOdd))
+                                        (j === Math.floor(size / 2) + 1 && isOdd))
                                 )
                                     continue;
 
@@ -244,58 +219,30 @@ export const boardSlice = createSlice({
                         break;
                     case 5:
                         startPos = 3;
-                        drawLabyrinth(
-                            { y: startPos, x: startPos },
-                            size - startPos * 2 - 1,
-                            "east",
-                            2,
-                            true,
-                        );
+                        drawLabyrinth({ y: startPos, x: startPos }, size - startPos * 2 - 1, "east", 2, true);
 
                         break;
                     case 6:
                         let x1 = getRandomInRange(2, Math.floor(size / 2) - 2);
-                        let x2 = getRandomInRange(
-                            Math.ceil(size / 2) + 2,
-                            size - 3,
-                        );
+                        let x2 = getRandomInRange(Math.ceil(size / 2) + 2, size - 3);
                         let temp = [x1, x2];
 
                         for (let i = 0; i < temp.length; i++) {
-                            let length1 = getRandomInRange(
-                                Math.round(size * 0.1),
-                                Math.round(size * 0.2),
-                            );
-                            let length2 = getRandomInRange(
-                                Math.round(size * 0.1),
-                                Math.round(size * 0.2),
-                            );
+                            let length1 = getRandomInRange(Math.round(size * 0.1), Math.round(size * 0.2));
+                            let length2 = getRandomInRange(Math.round(size * 0.1), Math.round(size * 0.2));
 
                             for (let j = 0; j < length1; j++) {
                                 state.value[j][temp[i]] = Square.ROCK;
                             }
                             for (let j = 0; j < length2; j++) {
-                                state.value[size - j - 1][temp[i]] =
-                                    Square.ROCK;
+                                state.value[size - j - 1][temp[i]] = Square.ROCK;
                             }
                         }
 
-                        let y1 = getRandomInRange(
-                            Math.round(size * 0.25),
-                            Math.round(size * 0.75),
-                        );
-                        let y2 = getRandomInRange(
-                            Math.round(size * 0.25),
-                            Math.round(size * 0.75),
-                        );
-                        let length1 = getRandomInRange(
-                            Math.round(size * 0.1),
-                            Math.round(size * 0.2),
-                        );
-                        let length2 = getRandomInRange(
-                            Math.round(size * 0.1),
-                            Math.round(size * 0.2),
-                        );
+                        let y1 = getRandomInRange(Math.round(size * 0.25), Math.round(size * 0.75));
+                        let y2 = getRandomInRange(Math.round(size * 0.25), Math.round(size * 0.75));
+                        let length1 = getRandomInRange(Math.round(size * 0.1), Math.round(size * 0.2));
+                        let length2 = getRandomInRange(Math.round(size * 0.1), Math.round(size * 0.2));
 
                         for (let j = 0; j < length1; j++) {
                             state.value[y1][j] = Square.ROCK;
@@ -305,22 +252,11 @@ export const boardSlice = createSlice({
                         }
 
                         let pos = {
-                            y: getRandomInRange(
-                                Math.floor(size * 0.5),
-                                Math.floor(size * 0.75),
-                            ),
-                            x: getRandomInRange(
-                                Math.floor(size * 0.25),
-                                Math.floor(size * 0.35),
-                            ),
+                            y: getRandomInRange(Math.floor(size * 0.5), Math.floor(size * 0.75)),
+                            x: getRandomInRange(Math.floor(size * 0.25), Math.floor(size * 0.35)),
                         };
 
-                        drawEastNorthLine(
-                            pos,
-                            getRandomInRange(size * 0.2, size * 0.3),
-                            "east",
-                            3,
-                        );
+                        drawEastNorthLine(pos, getRandomInRange(size * 0.2, size * 0.3), "east", 3);
 
                         break;
                 }
@@ -329,9 +265,7 @@ export const boardSlice = createSlice({
             function createSnake() {
                 state.snakeDirection = startDirection;
                 state.snakeLatestDirection = startDirection;
-                state.snakeEndDirectionStack = new Array(
-                    snakeBaseSize - 1,
-                ).fill(startDirection);
+                state.snakeEndDirectionStack = new Array(snakeBaseSize - 1).fill(startDirection);
 
                 const snakeSpace = snakeBaseSize + 4;
                 let dontBreak = false;
@@ -342,10 +276,7 @@ export const boardSlice = createSlice({
                     y = getRandomInRange(1, size - 2);
 
                     for (let i = x; i < x + snakeSpace; i++) {
-                        if (
-                            state.value[y][i - snakeBaseSize - 1] !==
-                            Square.EMPTY
-                        ) {
+                        if (state.value[y][i - snakeBaseSize - 1] !== Square.EMPTY) {
                             dontBreak = true;
                             break;
                         }
@@ -373,7 +304,7 @@ export const boardSlice = createSlice({
                 length: number,
                 direction: Direction,
                 drawFull: number,
-                cutLength: boolean,
+                cutLength: boolean
             ) {
                 if (length <= 0) return;
 
@@ -413,12 +344,7 @@ export const boardSlice = createSlice({
                 drawLabyrinth(pos, length, direction, drawFull, cutLength);
             }
 
-            function drawEastNorthLine(
-                start: Position,
-                length: number,
-                direction: Direction,
-                count: number,
-            ) {
+            function drawEastNorthLine(start: Position, length: number, direction: Direction, count: number) {
                 if (count <= 0) return;
 
                 let pos: Position = start;
@@ -500,8 +426,7 @@ function createFoodPos(board: Board): Position {
     return { y: y, x: x };
 }
 
-export const { resetBoard, moveSnake, changeDirection, clearSnake } =
-    boardSlice.actions;
+export const { resetBoard, moveSnake, changeDirection, clearSnake } = boardSlice.actions;
 
 export const boardState = (state: RootState) => state.board.value;
 export const getSpeed = (state: RootState) => state.board.snakeSpeed;

@@ -1,8 +1,4 @@
-import {
-    currentBoard,
-    resetBoard,
-    unpaused,
-} from "../features/board/boardSlice";
+import { currentBoard, resetBoard, unpaused } from "../features/board/boardSlice";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import Info from "./Info";
 
@@ -26,10 +22,7 @@ export default function Controls(props: ControlProps) {
         <div id="controls">
             <div className="control-buttons">
                 <button
-                    className={
-                        "button-green" +
-                        (props.mainClass === "hide-board" ? " disabled" : "")
-                    }
+                    className={"button-green" + (props.mainClass === "hide-board" ? " disabled" : "")}
                     onClick={restart}
                 >
                     Restart

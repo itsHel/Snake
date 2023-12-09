@@ -8,9 +8,7 @@ interface ThemeState {
 }
 
 const initialState: ThemeState = {
-    type: window.matchMedia("(prefers-color-scheme: dark)")?.matches
-        ? "dark"
-        : "light",
+    type: window.matchMedia("(prefers-color-scheme: dark)")?.matches ? "dark" : "light",
 };
 
 export const themeSlice = createSlice({
@@ -23,8 +21,6 @@ export const themeSlice = createSlice({
             } else {
                 state.type = "light";
             }
-
-            console.log(state.type);
         },
     },
 });
