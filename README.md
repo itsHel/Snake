@@ -1,5 +1,4 @@
 # Snake
-Play Snake.
 
 - Multiple levels to choose from  
 - Gets faster as you progress  
